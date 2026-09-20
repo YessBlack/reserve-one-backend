@@ -1,14 +1,20 @@
 package com.reserveone.lanhua.modules.user_information.entity;
 
-import com.reserveone.lanhua.modules.user.entity.User; // Asegúrate de que esta ruta sea correcta
+import com.reserveone.lanhua.modules.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "user_information")
 public class UserInformation {
 
+    // Getters y Setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user_information")
@@ -43,15 +49,12 @@ public class UserInformation {
     @Column(name = "rh", length = 10)
     private String rh;
 
-    @Lob
     @Column(name = "medic_conditions", columnDefinition = "TEXT")
     private String medicConditions;
 
-    @Lob
     @Column(name = "document_url", columnDefinition = "TEXT")
     private String documentUrl;
 
-    @Lob
     @Column(name = "eps_url", columnDefinition = "TEXT")
     private String epsUrl;
 
@@ -76,50 +79,4 @@ public class UserInformation {
     }
 
     public UserInformation() {}
-
-    // Getters y Setters
-    public Integer getIdUserInformation() { return idUserInformation; }
-    public void setIdUserInformation(Integer idUserInformation) { this.idUserInformation = idUserInformation; }
-
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public String getNumberDni() { return numberDni; }
-    public void setNumberDni(String numberDni) { this.numberDni = numberDni; }
-
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-
-    public String getUserPhone() { return userPhone; }
-    public void setUserPhone(String userPhone) { this.userPhone = userPhone; }
-
-    public String getContactName() { return contactName; }
-    public void setContactName(String contactName) { this.contactName = contactName; }
-
-    public String getKinship() { return kinship; }
-    public void setKinship(String kinship) { this.kinship = kinship; }
-
-    public String getContactPhone() { return contactPhone; }
-    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
-
-    public String getEps() { return eps; }
-    public void setEps(String eps) { this.eps = eps; }
-
-    public String getRh() { return rh; }
-    public void setRh(String rh) { this.rh = rh; }
-
-    public String getMedicConditions() { return medicConditions; }
-    public void setMedicConditions(String medicConditions) { this.medicConditions = medicConditions; }
-
-    public String getDocumentUrl() { return documentUrl; }
-    public void setDocumentUrl(String documentUrl) { this.documentUrl = documentUrl; }
-
-    public String getEpsUrl() { return epsUrl; }
-    public void setEpsUrl(String epsUrl) { this.epsUrl = epsUrl; }
-
-    public LocalDate getDateEps() { return dateEps; }
-    public void setDateEps(LocalDate dateEps) { this.dateEps = dateEps; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
