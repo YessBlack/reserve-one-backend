@@ -17,6 +17,9 @@ import com.reserveone.lanhua.modules.schedule.entity.Schedule;
 import com.reserveone.lanhua.modules.schedule.repository.ScheduleRepository;
 import com.reserveone.lanhua.modules.user.entity.User;
 import com.reserveone.lanhua.modules.user.repository.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ReservationService {
@@ -54,6 +57,7 @@ public class ReservationService {
         return mapToResponse(findReservationOrThrow(id));
     }
 
+    @Transactional
     public ReservationResponseDto createReservation(ReservationRequestDto dto) {
         List<User> users = userRepository.findAllById(dto.getIdUsers());
         if (users.isEmpty()) {
@@ -67,6 +71,8 @@ public class ReservationService {
             throw new RuntimeException("No hay suficientes cupos disponibles para este horario");
         }
 
+        validateUsersCanReserve(users, schedule);
+
         schedule.setQuotas(schedule.getQuotas() - users.size());
         scheduleRepository.save(schedule);
 
@@ -78,6 +84,26 @@ public class ReservationService {
 
         Reservation saved = reservationRepository.save(reservation);
         return mapToResponse(saved);
+    }
+
+    private void validateUsersCanReserve(List<User> users, Schedule schedule) {
+        for (User user : users) {
+            Long userId = user.getIdUser();
+
+            if (reservationRepository.existsActiveReservationByUserAndSchedule(userId, schedule.getIdSchedule())) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "El usuario ya tiene una reserva activa para esta clase"
+                );
+            }
+
+            if (reservationRepository.existsConfirmedReservationByUserAndScheduleDate(userId, schedule.getScheduleDate())) {
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "El usuario ya tiene una reserva confirmada en este horario"
+                );
+            }
+        }
     }
 
     public ReservationResponseDto cancelReservation(Long id) {
