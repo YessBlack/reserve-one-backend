@@ -47,18 +47,6 @@ public class UserService {
         return mapToResponse(savedUser);
     }
 
-    private UserResponseDto mapToResponse(User user) {
-        UserResponseDto response = new UserResponseDto();
-        response.setIdUser(user.getIdUser());
-        response.setNameUser(user.getNameUser());
-        response.setLastNameUser(user.getLastNameUser());
-        response.setEmailUser(user.getEmailUser());
-        response.setNameRol(user.getRol().getNameRol());
-        response.setCreationDate(user.getCreationDate());
-        response.setUpdateDate(user.getUpdateDate());
-        return response;
-    }
-
     public UserResponseDto updateUser(Long id, UserRequestDto dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
@@ -86,5 +74,25 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
         return mapToResponse(user);
+    }
+
+    private UserResponseDto mapToResponse(User user) {
+        UserResponseDto response = new UserResponseDto();
+        response.setIdUser(user.getIdUser());
+        response.setNameUser(user.getNameUser());
+        response.setLastNameUser(user.getLastNameUser());
+        response.setEmailUser(user.getEmailUser());
+        response.setNameRol(user.getRol().getNameRol());
+        response.setCreationDate(user.getCreationDate());
+        response.setUpdateDate(user.getUpdateDate());
+
+        if (user.getMembership() != null) {
+            response.setMembershipName(user.getMembership().getName());
+        }
+
+        response.setMembershipEndDate(user.getMembershipEndDate());
+        response.setHasActiveMembership(user.hasActiveMembership());
+
+        return response;
     }
 }

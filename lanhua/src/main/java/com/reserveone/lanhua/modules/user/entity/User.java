@@ -1,9 +1,10 @@
 package com.reserveone.lanhua.modules.user.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.reserveone.lanhua.modules.membership.entity.Membership;
 import jakarta.persistence.*;
-import org.hibernate.annotations.ManyToAny;
 
 import lombok.Data;
 import com.reserveone.lanhua.modules.user_information.entity.UserInformation;
@@ -53,5 +54,18 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         updateDate = LocalDateTime.now();
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_membership")
+    private Membership membership;
+
+    @Column(name = "membership_end_date")
+    private LocalDate membershipEndDate;
+
+    public boolean hasActiveMembership() {
+        return membership != null
+                && membershipEndDate != null
+                && !membershipEndDate.isBefore(LocalDate.now());
     }
 }
