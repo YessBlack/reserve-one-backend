@@ -53,6 +53,7 @@ public class Payment {
     @Column(name = "id_membership", nullable = false)
     private Long idMembership;
 
+    @Builder.Default
     @Column(name = "membership_activated", nullable = false)
     private boolean membershipActivated = false;
 }
